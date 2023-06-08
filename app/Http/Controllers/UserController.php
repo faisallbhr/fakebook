@@ -13,19 +13,18 @@ class UserController extends Controller
         if(! auth()->check()){
             return view('welcome');
         }
-        $users = User::whereNot('id', auth()->user()->id)
-                    ->doesntHave('follows')->get();
+        $users = User::whereNot('id', auth()->user()->id)->get();
         return view('home', [
             'users' => $users
         ]);
     }
     public function follow($id){
         // $user = User::find(auth()->user()->id);
-        $user = User::where('id', $id)->get();
+        $user = User::find($id);
         DB::beginTransaction();
         try{
-            $following = Follow::create(['name'=>$user[0]->name]);
-            $following->users()->attach($id);
+            $following = Follow::create(['name'=>$user->name]);
+            $following->users()->attach(auth()->user()->id);
             DB::commit();
             return redirect()->back()->with('success', 'berhasil follow');
         }catch(\Exception $e){
