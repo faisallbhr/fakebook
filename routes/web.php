@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -16,8 +17,16 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [UserController::class, 'index']);
-Route::post('/follow/{id}', [UserController::class, 'follow'])->middleware('auth');
+
 Route::middleware('auth')->group(function () {
+    // FOLLOW AKUN
+    Route::post('/follow/{id}', [UserController::class, 'follow'])->middleware('auth');
+
+    // POSTINGAN
+    Route::post('/posts', [UserController::class, 'store']);
+    Route::get('/my-profile', [UserController::class, 'indexProfile']);
+
+    // PROFILE EDIT
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
