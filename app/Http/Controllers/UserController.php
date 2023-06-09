@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Following;
 use App\Models\User;
-use App\Models\Follow;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,18 +13,22 @@ class UserController extends Controller
         if(! auth()->check()){
             return view('welcome');
         }
-        $users = User::whereNot('id', auth()->user()->id)->get();
+        $auth = User::find(auth()->user()->id);
+        $users = User::whereNot('id', auth()->user()->id)
+                    ->whereDoesntHave('followers', function ($query){
+                        $query->where('user_id', auth()->user()->id);
+                    })->get();
         return view('home', [
             'users' => $users
         ]);
     }
     public function follow($id){
-        // $user = User::find(auth()->user()->id);
         $user = User::find($id);
         DB::beginTransaction();
         try{
-            $following = Follow::create(['name'=>$user->name]);
-            $following->users()->attach(auth()->user()->id);
+            $followers = User::find(auth()->user()->id);
+            $following = User::find($id);
+            $followers->followings()->attach($following);
             DB::commit();
             return redirect()->back()->with('success', 'berhasil follow');
         }catch(\Exception $e){

@@ -11,8 +11,11 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    public function follows(){
-        return $this->belongsToMany(Follow::class);
+    public function followings(){
+        return $this->belongsToMany(User::class, 'followings', 'user_id', 'following_id');
+    }
+    public function followers(){
+        return $this->belongsToMany(User::class, 'followings', 'following_id', 'user_id');
     }
 
     /**

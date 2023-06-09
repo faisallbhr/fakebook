@@ -5,11 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Follow extends Model
+class Following extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
-    public function users(){
-        return $this->belongsToMany(User::class);
-    }
+    protected $table = ['followings'];
 }
