@@ -13,13 +13,18 @@ class UserController extends Controller
         if(! auth()->check()){
             return view('welcome');
         }
-        $auth = User::find(auth()->user()->id);
         $users = User::whereNot('id', auth()->user()->id)
-                    ->whereDoesntHave('followers', function ($query){
+                    ->whereDoesntHave('followings', function ($query){
+                        $query->where('following_id', auth()->user()->id);
+                    })->get();
+        $followers = User::whereNot('id', auth()->user()->id)
+                    ->whereHas('followers', function ($query){
                         $query->where('user_id', auth()->user()->id);
                     })->get();
+                    
         return view('home', [
-            'users' => $users
+            'users' => $users,
+            'followers'=>$followers
         ]);
     }
     public function follow($id){
