@@ -23,8 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/follow/{id}', [UserController::class, 'follow'])->middleware('auth');
 
     // POSTINGAN
-    Route::post('/posts', [UserController::class, 'store']);
-    Route::get('/my-profile', [UserController::class, 'indexProfile']);
+    Route::post('/posts', [PostController::class, 'store']);
+    Route::get('/my-profile', [PostController::class, 'index']);
 
     // PROFILE EDIT
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

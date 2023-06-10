@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Following;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -40,39 +39,17 @@ class UserController extends Controller
             'posts'=>$posts
         ]);
     }
-    public function store(Request $request){
-        $validatedData = $request->validate([
-            'description'=>'required|max:255'
-        ],[
-            'description.required'=> 'Bidang deskripsi harus diisi',
-            'description.max'=> 'Bidang deskripsi tidak boleh lebih dari 255 karakter',
-        ]);
-        \DB::beginTransaction();
-        try{
-            $validatedData['user_id'] = auth()->user()->id;
-            Post::create($validatedData);
-            \DB::commit();
-            return redirect()->back()->with('success', 'Berhasil membuat postingan');
-        }catch(\Exception $e){
-            \DB::rollBack();
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
     public function follow($id){
-        $user = User::find($id);
         DB::beginTransaction();
         try{
             $followers = User::find(auth()->user()->id);
             $following = User::find($id);
             $followers->followings()->attach($following);
             DB::commit();
-            return redirect()->back()->with('success', 'berhasil follow');
+            return redirect()->back();
         }catch(\Exception $e){
             DB::rollBack();
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back();
         }
-    }
-    public function indexProfile(){
-        return view('my-profile.index');
     }
 }

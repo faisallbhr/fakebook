@@ -1,9 +1,29 @@
 <x-app-layout>
-<div class="mx-auto my-6">
+{{-- POST MODAL --}}
+<div id="modal" class="bg-black w-full h-[100vh] absolute z-50 hidden">
+    <form action="{{ url('posts') }}" method="post" class="bg-white p-4 rounded shadow absolute w-full max-w-2xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" enctype="multipart/form-data">
+        @csrf
+        <div class="flex items-center gap-2">
+            <div class="flex items-center justify-center border-2 border-primary w-12 h-12 rounded-full px-4">
+                <i class="fa-solid fa-user text-primary scale-150"></i>
+            </div>
+            <p class="font-bold text-xl">{{ auth()->user()->name }}</p>
+        </div>
+        <textarea name="description" id="description" class="w-full border-none " placeholder="Apa yang sedang kamu pikirkan, {{ auth()->user()->name }}?"></textarea>
+        @error("description")
+            <small>{{ $message }}</small>
+        @enderror
+        <div>
+            <input name="photo" type="file">
+        </div>
+        <button class="w-full bg-primary my-2 rounded font-bold text-white py-2">Kirim</button>
+    </form>
+</div>
+<div class="mx-auto py-6 relative">
     <div class="text-center">
     @if (session('success'))
         {{ session('success') }}
-    @else
+    @elseif(session('error'))
         {{ session('error') }}  
     @endif
     </div>
@@ -26,20 +46,20 @@
         </div>
 
         {{-- POSTINGAN --}}
-        <div class="bg-green-500 w-full rounded shadow mx-60">
-            <div class="h-40 bg-white rounded">
-                <form action="{{ url('posts') }}" method="post" class="p-4" enctype="multipart/form-data">
-                    @csrf
-                    <textarea name="description" id="description" class="w-full"></textarea>
-                    @error("description")
-                        <small>{{ $message }}</small>
-                    @enderror
-                    <br>
-                    <input name="image" id="image" type="file">
-                    <br>
-                    <button>kirim</button>
-                </form>
+        <div class="w-full rounded mx-60">
+            {{-- CREATE POST --}}
+            <div class="bg-white rounded shadow">
+                <div class="flex w-full p-4 gap-2 items-center">
+                    <div class="flex items-center justify-center border-2 border-primary w-12 h-12 rounded-full px-4">
+                        <i class="fa-solid fa-user text-primary scale-150"></i>
+                    </div>
+                    <div class="w-full">
+                        <button id="btn" class="w-full text-left bg-gray-100 hover:bg-gray-200 px-4 py-4 rounded-full">Apa yang sedang kamu pikirkan, {{ auth()->user()->name }}?</button>
+                    </div>
+                </div>
             </div>
+
+            {{-- ALL POST --}}
             <div class="my-10 bg-blue-400">
                 <div>
                 @foreach ($posts as $post)
@@ -60,4 +80,14 @@
         </div>
     </div>
 </div>
+
+<script>
+    const btn = document.querySelector('#btn');
+    const modal = document.querySelector('#modal');
+
+    btn.addEventListener('click', function(){
+        modal.classList.toggle('hidden')
+        modal.classList.toggle('flex')
+    })
+</script>
 </x-app-layout>
