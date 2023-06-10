@@ -14,25 +14,23 @@ class UserController extends Controller
         if(! auth()->check()){
             return view('welcome');
         }
+        $user_id = auth()->user()->id;
         // USER YANG BELUM DIFOLLOW START
-        $users = User::whereNot('id', auth()->user()->id)
-                    ->whereDoesntHave('followings', function ($query){
-                        $query->where('following_id', auth()->user()->id);
-                    })->get();
+        $user = User::find($user_id);
+        $users = User::whereNot('id', $user_id)
+                    ->whereNotIn('id', function ($query) use ($user_id){
+                    $query->select('followings.following_id')
+                        ->from('followings')
+                        ->where('followings.user_id', $user_id);
+                })->get();
         // USER YANG BELUM DIFOLLOW END
 
         // USER YANG SUDAH DIFOLLOW START
-        $followings = User::whereNot('id', auth()->user()->id)
-                        ->whereHas('followings', function ($query){
-                            $query->where('following_id', auth()->user()->id);
-                        })->get();
+        $followings = $user->followings()->get();
         // USER YANG SUDAH DIFOLLOW END
-                
-        // POSTINGAN USER YANG SUDAH DIFOLLOW START
-        $following_posts_id = User::whereHas('followings', function ($query){
-            $query->where('following_id', auth()->user()->id);
-        })->pluck('id');
 
+        // POSTINGAN USER YANG SUDAH DIFOLLOW START
+        $following_posts_id = $user->followings()->pluck('users.id');
         $posts = Post::whereIn('user_id', $following_posts_id)->latest()->get();
         // POSTINGAN USER YANG SUDAH DIFOLLOW END
 

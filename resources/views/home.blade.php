@@ -15,7 +15,7 @@
                     <p>{{ $user->name }}</p>
                     <form action="{{ url('follow/'.$user->id) }}" method="post">
                         @csrf
-                        @if (auth()->user()->followers->contains($user->id))
+                        @if (in_array(auth()->user()->id,$user->followings->pluck('id')->toArray()))
                             <button>follow back</button>
                         @else
                             <button>follow</button>
