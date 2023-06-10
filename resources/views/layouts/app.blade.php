@@ -41,6 +41,12 @@
             <main>
                 {{ $slot }}
             </main>
+            <footer class="text-center bg-secondary py-4 text-white">
+                <p>©Copyright <span class="text-primary font-bold">FakeBook</span> | Made With ❤️</p>
+            </footer>
         </div>
+
+        {{-- FlowBite --}}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
     </body>
 </html>
