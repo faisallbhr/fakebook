@@ -16,6 +16,13 @@
 
         {{-- Font Awesome --}}
         <script src="https://kit.fontawesome.com/516b6a89c8.js" crossorigin="anonymous"></script>
+
+        {{-- CSS --}}
+        <style>
+            .dropdown:hover .dropdown-menu {
+                display: block;
+            }
+        </style>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">

@@ -1,5 +1,4 @@
-<x-app-layout>
-<div id="modal" class="bg-black w-full h-[100vh] absolute z-50 hidden">
+<div id="modal" class="bg-black w-full h-full fixed z-50 hidden bg-opacity-90 shadow-xl">
     <form action="{{ url('posts') }}" method="post" class="bg-white p-4 rounded shadow absolute w-full max-w-2xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" enctype="multipart/form-data">
         @csrf
         <div class="flex items-center gap-2">
@@ -18,6 +17,7 @@
         <button class="w-full bg-primary my-2 rounded font-bold text-white py-2">Kirim</button>
     </form>
 </div>
+<x-app-layout>
 
 <div class="max-w-5xl mx-auto my-4">
     {{-- HEADER --}}
@@ -54,7 +54,21 @@
 
     {{-- MY POST --}}
     @foreach ($posts as $post)
-        <div class="bg-white rounded shadow my-4 p-4">
+        <div class="bg-white rounded shadow my-4 p-4 relative ">
+            <div class="dropdown">
+                <i class="fa-solid fa-ellipsis absolute top-4 right-4 cursor-pointer dropdown"></i>
+                <ul class="dropdown-menu hidden bg-white absolute top-7 right-7 pr-4 pl-2 py-2 text-secondary rounded-md" 
+                    style="box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;">
+                    <li class="hover:text-black text-sm"><a href="">Edit</a></li>
+                    <li class="hover:text-black text-sm">
+                        <form action="{{ url('my-profile/posts/'.$post->id) }}" method="post">
+                            @method('delete')
+                            @csrf
+                            <button>Hapus</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
             <div class="flex gap-2">
                 <div class="flex items-center justify-center border-2 border-primary w-12 h-12 rounded-full px-4">
                     <i class="fa-solid fa-user text-primary scale-150"></i>

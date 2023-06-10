@@ -41,4 +41,8 @@ class PostController extends Controller
             return redirect('/')->with('error', 'Gagal membuat postingan, sesuaikan format anda');
         }
     }
+    public function destroy($id){
+        Post::destroy($id);
+        return redirect()->back();
+    }
 }
