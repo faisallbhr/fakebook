@@ -1,93 +1,181 @@
-<x-app-layout>
-{{-- POST MODAL --}}
-<div id="modal" class="bg-black w-full h-[100vh] absolute z-50 hidden">
-    <form action="{{ url('posts') }}" method="post" class="bg-white p-4 rounded shadow absolute w-full max-w-2xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" enctype="multipart/form-data">
-        @csrf
-        <div class="flex items-center gap-2">
-            <div class="flex items-center justify-center border-2 border-primary w-12 h-12 rounded-full px-4">
-                <i class="fa-solid fa-user text-primary scale-150"></i>
+<div id="defaultModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full bg-black bg-opacity-90">
+    <div class="relative w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow">
+            <!-- Modal header -->
+            <div class="flex items-start justify-between mx-4 py-4 border-b rounded-t">
+                <h3 class="text-xl font-semibold text-gray-900 ">
+                    Buat postingan
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center " data-modal-hide="defaultModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
             </div>
-            <p class="font-bold text-xl">{{ auth()->user()->name }}</p>
+            <!-- Modal body -->
+            <form action="{{ url('posts/') }}" method="post" class="p-4" enctype="multipart/form-data">
+                @method('put')
+                @csrf
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center justify-center border-2 border-primary w-12 h-12 rounded-full px-4">
+                        <i class="fa-solid fa-user text-primary scale-150"></i>
+                    </div>
+                    <p class="font-bold text-xl">{{ auth()->user()->name }}</p>
+                </div>
+                <textarea name="description" id="description" class="w-full border-none" placeholder="Apa yang sedang kamu pikirkan, {{ auth()->user()->name }}"></textarea>
+                <div>
+                    <input name="photo" type="file">
+                </div>
+                <button class="w-full bg-primary my-2 rounded font-bold text-white py-2">Kirim</button>
+            </form>
         </div>
-        <textarea name="description" id="description" class="w-full border-none " placeholder="Apa yang sedang kamu pikirkan, {{ auth()->user()->name }}?"></textarea>
-        @error("description")
-            <small>{{ $message }}</small>
-        @enderror
-        <div>
-            <input name="photo" type="file">
-        </div>
-        <button class="w-full bg-primary my-2 rounded font-bold text-white py-2">Kirim</button>
-    </form>
-</div>
-<div class="mx-auto py-6 relative">
-    <div class="text-center">
-    @if (session('success'))
-        {{ session('success') }}
-    @elseif(session('error'))
-        {{ session('error') }}  
-    @endif
     </div>
-    <div class="flex mx-4">
-        {{-- SARAN FOLLOWING --}}
-        <div class="bg-blue-500 w-1/4 text-center h-fit">
-            @foreach ($users as $user)
-                <div class="grid grid-cols-2 max-w-5xl mx-auto">
-                    <p>{{ $user->name }}</p>
-                    <form action="{{ url('follow/'.$user->id) }}" method="post">
+</div>
+
+<x-app-layout>
+    <div class="flex min-h-screen">
+        <div class="w-1/4 my-4 px-20">
+            <div class="flex gap-2 items-center border-b">
+                <div class="border-2  border-primary rounded-full w-8 h-8 flex justify-center items-center -ml-10">
+                    <i class="fa-solid fa-person-circle-plus text-primary"></i>
+                </div>
+                <p class="font-semibold">Saran ikuti:</p>
+            </div>
+            <div class="my-2">
+                @foreach ($users as $user)
+                <div class="grid grid-cols-2">
+                    <p class=" my-2">{{ $user->name }}</p>
+                    <form action="{{ url('follow/'.$user->id) }}" method="post" class="flex justify-center my-auto ">
                         @csrf
                         @if (in_array(auth()->user()->id,$user->followings->pluck('id')->toArray()))
-                            <button>follow back</button>
+                            <button class="bg-primary text-white px-2 py-1 rounded font-medium">Ikuti balik</button>
                         @else
-                            <button>follow</button>
+                            <button class="bg-primary text-white px-2 py-1 rounded font-medium">Ikuti</button>
                         @endif
                     </form>
                 </div>
-            @endforeach
+                @endforeach
+            </div>
         </div>
-
-        {{-- POSTINGAN --}}
-        <div class="w-full rounded mx-60">
-            {{-- CREATE POST --}}
-            <div class="bg-white rounded shadow">
+        <div class="max-w-5xl w-full mx-auto my-4">
+            {{-- BUAT POST --}}
+            <div class="bg-white rounded shadow my-4">
                 <div class="flex w-full p-4 gap-2 items-center">
                     <div class="flex items-center justify-center border-2 border-primary w-12 h-12 rounded-full px-4">
                         <i class="fa-solid fa-user text-primary scale-150"></i>
                     </div>
                     <div class="w-full">
-                        <button id="btn" class="w-full text-left bg-gray-100 hover:bg-gray-200 px-4 py-4 rounded-full">Apa yang sedang kamu pikirkan, {{ auth()->user()->name }}?</button>
+                        <button data-modal-target="defaultModal" data-modal-toggle="defaultModal" class="w-full text-left bg-gray-100 hover:bg-gray-200 px-4 py-4 rounded-full">Apa yang sedang kamu pikirkan, {{ auth()->user()->name }}?</button>
                     </div>
                 </div>
             </div>
-
-            {{-- ALL POST --}}
-            <div class="my-10 bg-blue-400">
-                <div>
-                @foreach ($posts as $post)
-                    <div>{{ $post->user->name }}</div>
-                    <div>{{ $post->description }}</div>
-                @endforeach
+    
+            {{-- MY POST --}}
+            @foreach ($posts as $post)
+            <!-- Main modal -->
+            <div id="defaultModal{{ $post->id }}" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full bg-black bg-opacity-90">
+                <div class="relative w-full max-w-2xl max-h-full">
+                    <!-- Modal content -->
+                    <div class="relative bg-white rounded-lg shadow">
+                        <!-- Modal header -->
+                        <div class="flex items-start justify-between mx-4 py-4 border-b rounded-t">
+                            <h3 class="text-xl font-semibold text-gray-900 ">
+                                Edit postingan
+                            </h3>
+                            <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center " data-modal-hide="defaultModal{{ $post->id }}">
+                                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
+                        </div>
+                        <!-- Modal body -->
+                        <form action="{{ url('my-profile/posts/'.$post->id) }}" method="post" class="p-4" enctype="multipart/form-data">
+                            @method('put')
+                            @csrf
+                            <div class="flex items-center gap-2">
+                                <div class="flex items-center justify-center border-2 border-primary w-12 h-12 rounded-full px-4">
+                                    <i class="fa-solid fa-user text-primary scale-150"></i>
+                                </div>
+                                <p class="font-bold text-xl">{{ auth()->user()->name }}</p>
+                            </div>
+                            <textarea name="description" id="description" class="w-full border-none ">{{ $post->description }}</textarea>
+                            <div>
+                                <input name="photo" type="file">
+                            </div>
+                            <button class="w-full bg-primary my-2 rounded font-bold text-white py-2">Ubah postingan</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-            
-        </div>
         
-        {{-- FOLLOWING --}}
-        <div class="bg-red-500 w-1/4 text-center h-fit">
-            <h4>Following ({{ $followings->count() }})</h4>
-            @foreach ($followings as $user)
-                    <p>{{ $user->name }}</p>
+            {{-- POST --}}
+            <div class="bg-white rounded shadow my-4 p-4 relative ">
+                <div class="flex gap-2">
+                    <div class="flex items-center justify-center border-2 border-primary w-12 h-12 rounded-full px-4">
+                        <i class="fa-solid fa-user text-primary scale-150"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-xl">{{ $post->user->name }}</p>
+                        <small class="text-secondary">{{ $post->created_at->format('d-m-Y') }}</small>
+                    </div>
+                </div>
+                <div>
+                    <p class="px-1 py-2">{{ $post->description }}</p>
+                    @if ($post->photo!=null)
+                    <div>
+                        <img src="{{ 'storage/'.$post->photo }}" alt="photo" class="object-contain h-80 mx-auto border rounded-md">
+                    </div>
+                    @endif
+                    <div class="flex justify-center items-center gap-1 border-b">
+                        <p id="like{{ $post->id }}">{{ $post->likers->count() }}</p>
+                        <input id="post-id" type="text" value="{{ $post->id  }}" class="hidden">
+                        <button id="btnLike{{ $post->id }}" onclick="like({{ $post->id }})" class="py-2 hover:text-primary"><i class="fa-regular fa-thumbs-up mx-1"></i>Like</button>
+                    </div>
+                </div>
+            </div>
             @endforeach
         </div>
+        <div class="w-1/4 my-4 px-20">
+            <div class="flex gap-2 items-center border-b">
+                <div class="border-2 border-primary rounded-full w-8 h-8 flex justify-center items-center -ml-10">
+                    <i class="fa-solid fa-users-line text-primary"></i>
+                </div>
+                <h4 class="font-semibold">Following <span class="font-normal">({{ $followings->count() }})</span></h4>
+            </div>
+            <div class="my-2">
+                @foreach ($followings as $user)
+                        <p>{{ $user->name }}</p>
+                @endforeach
+            </div>
+        </div>
     </div>
-</div>
-
-<script>
-    const btn = document.querySelector('#btn');
-    const modal = document.querySelector('#modal');
-
-    btn.addEventListener('click', function(){
-        modal.classList.toggle('hidden')
-        modal.classList.toggle('flex')
-    })
-</script>
+    <script>
+        $(document).ready(function() {
+            
+        });
+        
+        function like(id){
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            let postid = $('#post-id').val();
+            $.ajax({
+                type:"post",
+                url: "{{ url('like') }}"+"/"+id,
+                data: "id="+postid,
+                success: function(response){
+                    $('#like'+id).text(response.likes)
+                    if($('#btnLike'+id).hasClass('text-primary')){
+                        $('#btnLike'+id).removeClass('text-primary')
+                    }else{
+                        $('#btnLike'+id).addClass('text-primary')
+                    }
+                },
+                error: function(xhr, status, error){
+                    alert(xhr.responseText);
+                }
+            })
+        }
+    </script>
 </x-app-layout>

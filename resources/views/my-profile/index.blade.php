@@ -32,8 +32,8 @@
     </div>
 </div>
 
-<x-app-layout id="index">
-<div class="flex">
+<x-app-layout>
+<div class="flex min-h-screen">
     <div class="w-1/4 my-4 px-20">
         <div class="flex gap-2 items-center border-b">
             <div class="border-2  border-primary rounded-full w-8 h-8 flex justify-center items-center -ml-10">
@@ -57,7 +57,7 @@
             @endforeach
         </div>
     </div>
-    <div class="max-w-5xl mx-auto my-4">
+    <div class="max-w-5xl w-full mx-auto my-4">
         {{-- HEADER --}}
         <div class="bg-white flex gap-4 p-4">
             <div class="flex items-center justify-center border-2 border-primary w-20 h-20 rounded-full px-4">
@@ -159,14 +159,11 @@
                     <img src="{{ 'storage/'.$post->photo }}" alt="photo" class="object-contain h-80 mx-auto border rounded-md">
                 </div>
                 @endif
-                {{-- <form action="{{ url('like/'.$post->id) }}" method="post"> --}}
-                    {{-- @csrf --}}
-                    <div class="flex justify-center items-center gap-1 border-b">
-                        <p id="like{{ $post->id }}">{{ $post->likers->count() }}</p>
-                        <input id="post-id" type="text" value="{{ $post->id  }}" class="hidden">
-                        <button id="btnLike{{ $post->id }}" onclick="like({{ $post->id }})" class="py-2 hover:text-primary"><i class="fa-regular fa-thumbs-up mx-1"></i>Like</button>
-                    </div>
-                {{-- </form> --}}
+                <div class="flex justify-center items-center gap-1 border-b">
+                    <p id="like{{ $post->id }}">{{ $post->likers->count() }}</p>
+                    <input id="post-id" type="text" value="{{ $post->id  }}" class="hidden">
+                    <button id="btnLike{{ $post->id }}" onclick="like({{ $post->id }})" class="py-2 hover:text-primary"><i class="fa-regular fa-thumbs-up mx-1"></i>Like</button>
+                </div>
             </div>
         </div>
         @endforeach
@@ -187,6 +184,10 @@
 </div>
 
 <script>
+    $(document).ready(function() {
+        
+    });
+    
     function like(id){
         $.ajaxSetup({
             headers: {
