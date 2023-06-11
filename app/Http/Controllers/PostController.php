@@ -75,7 +75,12 @@ class PostController extends Controller
     }
     public function like($id){
         $user = User::find(auth()->user()->id);
-        $user->likedPosts()->attach($id);
+        $post = Post::find($id);
+        if(in_array($user->id, $post->likers->pluck('id')->toArray())){
+            $user->likedPosts()->detach($id); //unliked
+        }else{
+            $user->likedPosts()->attach($id); //liked
+        }
         return redirect()->back();
     }
 }
