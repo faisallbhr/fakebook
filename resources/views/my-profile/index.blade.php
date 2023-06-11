@@ -32,7 +32,7 @@
     </div>
 </div>
 
-<x-app-layout>
+<x-app-layout id="index">
 <div class="flex">
     <div class="w-1/4 my-4 px-20">
         <div class="flex gap-2 items-center border-b">
@@ -159,10 +159,14 @@
                     <img src="{{ 'storage/'.$post->photo }}" alt="photo" class="object-contain h-80 mx-auto border rounded-md">
                 </div>
                 @endif
-                <form action="{{ url('like/'.$post->id) }}" method="post">
-                    @csrf
-                    <button class="w-full py-2 border-b hover:text-primary ">{{ $post->likers->count() }}<i class="fa-regular fa-thumbs-up mx-1"></i>Like</button>
-                </form>
+                {{-- <form action="{{ url('like/'.$post->id) }}" method="post"> --}}
+                    {{-- @csrf --}}
+                    <div class="flex justify-center items-center gap-1 border-b">
+                        <p id="like{{ $post->id }}">{{ $post->likers->count() }}</p>
+                        <input id="post-id" type="text" value="{{ $post->id  }}" class="hidden">
+                        <button id="btnLike{{ $post->id }}" onclick="like({{ $post->id }})" class="py-2 hover:text-primary"><i class="fa-regular fa-thumbs-up mx-1"></i>Like</button>
+                    </div>
+                {{-- </form> --}}
             </div>
         </div>
         @endforeach
@@ -181,7 +185,31 @@
         </div>
     </div>
 </div>
-{{-- <footer class="text-center bg-secondary py-4 text-white">
-    <p>©Copyright <span class="text-primary font-bold">FakeBook</span> | Made With ❤️</p>
-</footer> --}}
+
+<script>
+    function like(id){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        let postid = $('#post-id').val();
+        $.ajax({
+            type:"post",
+            url: "{{ url('like') }}"+"/"+id,
+            data: "id="+postid,
+            success: function(response){
+                $('#like'+id).text(response.likes)
+                if($('#btnLike'+id).hasClass('text-primary')){
+                    $('#btnLike'+id).removeClass('text-primary')
+                }else{
+                    $('#btnLike'+id).addClass('text-primary')
+                }
+            },
+            error: function(xhr, status, error){
+                alert(xhr.responseText);
+            }
+        })
+    }
+</script>
 </x-app-layout>
