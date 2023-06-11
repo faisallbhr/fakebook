@@ -10,12 +10,24 @@ class PostController extends Controller
 {
     public function index(){
         $user = User::find(auth()->user()->id);
-        $followings = $user->followings()->count();
         $followers =\DB::table('followings')->from('followings')->where('following_id', auth()->user()->id)->count();
         $posts = Post::where('user_id', auth()->user()->id)->latest()->get();
+
+        // USER YANG BELUM DIFOLLOW START
+        $users = User::whereNot('id', $user->id)
+                    ->whereNotIn('id', function ($query) use ($user){
+                    $query->select('followings.following_id')
+                        ->from('followings')
+                        ->where('followings.user_id', $user->id);
+                })->get();
+        // USER YANG BELUM DIFOLLOW END
+        
+        // USER YANG SUDAH DIFOLLOW START
+        $followings = $user->followings()->get();
+        // USER YANG SUDAH DIFOLLOW END
         
         return view('my-profile.index', [
-            'user' => $user,
+            'users'=>$users,
             'followers'=>$followers,
             'followings'=>$followings,
             'posts'=>$posts
@@ -59,6 +71,11 @@ class PostController extends Controller
     }
     public function destroy($id){
         Post::destroy($id);
+        return redirect()->back();
+    }
+    public function like($id){
+        $user = User::find(auth()->user()->id);
+        $user->likedPosts()->attach($id);
         return redirect()->back();
     }
 }

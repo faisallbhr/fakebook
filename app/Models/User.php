@@ -17,6 +17,9 @@ class User extends Authenticatable
     public function posts(){
         return $this->hasMany(Post::class);
     }
+    public function likedPosts(){
+        return $this->belongsToMany(User::class, 'liked_post', 'user_id', 'post_id');
+    }
 
     /**
      * The attributes that are mass assignable.

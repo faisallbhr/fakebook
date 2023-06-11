@@ -23,10 +23,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/follow/{id}', [UserController::class, 'follow'])->middleware('auth');
 
     // POSTINGAN
-    Route::get('/my-profile', [PostController::class, 'index']);
     Route::post('/posts', [PostController::class, 'store']);
+    Route::get('/my-profile', [PostController::class, 'index']);
     Route::put('my-profile/posts/{id}', [PostController::class, 'update']);
     Route::delete('my-profile/posts/{id}', [PostController::class, 'destroy']);
+    Route::post('/like/{id}', [PostController::class, 'like']);
 
     // PROFILE EDIT
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
