@@ -6,6 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+        <link rel="shortcut icon" href="{{ asset('assets/logo.svg') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,6 +26,9 @@
             }
             .dropdown:hover .dropdown-menu {
                 display: block;
+            }
+            textarea:focus {
+                box-shadow: none;
             }
         </style>
     </head>

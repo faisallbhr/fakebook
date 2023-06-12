@@ -41,7 +41,9 @@ class PostController extends Controller
                 'photo'=> 'image'
             ]);
             $validatedData['user_id'] = auth()->user()->id;
-            $validatedData['photo'] = $request->file('photo')->store('post-photo');
+            if($request->file('photo')){
+                $validatedData['photo'] = $request->file('photo')->store('post-photo');
+            }
             Post::create($validatedData);
             \DB::commit();
             return redirect()->back()->with('success', 'Berhasil membuat postingan');
