@@ -19,15 +19,17 @@ use App\Http\Controllers\ProfileController;
 Route::get('/', [UserController::class, 'index']);
 
 Route::middleware('auth')->group(function () {
-    // FOLLOW AKUN
+    // AKTIFITAS
     Route::post('/follow/{id}', [UserController::class, 'follow'])->middleware('auth');
+    Route::post('/like/{id}', [UserController::class, 'like']);
+    Route::post('/comment/{id}', [UserController::class, 'comment']);
+    Route::delete('/comment/{id}', [UserController::class, 'uncomment']);
 
     // POSTINGAN
     Route::post('/posts', [PostController::class, 'store']);
     Route::get('/my-profile', [PostController::class, 'index']);
     Route::put('my-profile/posts/{id}', [PostController::class, 'update']);
     Route::delete('my-profile/posts/{id}', [PostController::class, 'destroy']);
-    Route::post('/like/{id}', [PostController::class, 'like']);
 
     // PROFILE EDIT
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

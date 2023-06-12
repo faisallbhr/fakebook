@@ -137,7 +137,7 @@
                         <form action="{{ url('my-profile/posts/'.$post->id) }}" method="post">
                             @method('delete')
                             @csrf
-                            <button>Hapus</button>
+                            <button onclick="return confirm('Apakah anda yakin ingin menghapus postingan?')">Hapus</button>
                         </form>
                     </li>
                 </ul>
@@ -164,6 +164,42 @@
                     <p id="like{{ $post->id }}">{{ $post->likers->count() }}</p>
                     <input id="post-id" type="text" value="{{ $post->id  }}" class="hidden">
                     <button id="btnLike{{ $post->id }}" onclick="like({{ $post->id }})" class="py-2 hover:text-primary @if(in_array(auth()->user()->id, $post->likers->pluck('id')->toArray())) text-primary @endif"><i class="fa-regular fa-thumbs-up mx-1"></i>Like</button>
+                </div>
+                <div class="flex items-center gap-2 mt-2 mb-4">
+                    <div class="flex items-center justify-center w-10 h-10">
+                        <img src="https://ui-avatars.com/api/?name={{ auth()->user()->name }}&rounded=true&color=1b74e4" alt="Profile image" class="border-2 border-primary rounded-full">
+                    </div>
+                    <form action="{{ url('comment/'.$post->id) }}" method="POST" class="flex items-center gap-2 w-full">
+                    @csrf
+                        <input type="text" name="comment" class="w-full rounded-full bg-gray-100 border-none" style="text-decoration: none; box-shadow: none" placeholder="Tulis komentar...">
+                        <button class="rounded-full bg-primary text-white px-2 py-1 shadow"><i class="fa-solid fa-arrow-right"></i></button>
+                    </form>
+                </div>
+                <div class=" my-2">
+                    @if (in_array($post->id, $post->comment->pluck('post_id')->toArray()))
+                    @foreach ($post->comment as $comment)
+                    <div class="flex items-center gap-2 py-2 border-b ">
+                        <div class="flex items-center justify-center w-10 h-10">
+                            <img src="https://ui-avatars.com/api/?name={{ $comment->user->name }}&rounded=true&color=1b74e4" alt="Profile image" class="border-2 border-primary rounded-full">
+                        </div>
+                        <div class="flex gap-2 items-center justify-between w-full">
+                            <div>
+                                <p class="font-semibold">{{ $comment->user->name }}</p>
+                                <p class="w-full rounded-full bg-gray-100 px-3 py-2">{{ $comment->comment }}</p>
+                            </div>
+                            <div>
+                                @if ($comment->user_id==auth()->user()->id)
+                                <form action="{{ url('comment/'.$comment->id) }}" method="post">
+                                    @method('delete')
+                                    @csrf
+                                    <button onclick="return confirm('Apakah anda yakin ingin menghapus komentar?')"><i class="fa-regular fa-trash-can"></i></button>
+                                </form>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                    @endif
                 </div>
             </div>
         </div>

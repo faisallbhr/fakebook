@@ -75,22 +75,4 @@ class PostController extends Controller
         Post::destroy($id);
         return redirect()->back();
     }
-    public function like($id){
-        $user = User::find(auth()->user()->id);
-        $post = Post::find($id);
-        \DB::beginTransaction();
-        if(in_array($user->id, $post->likers->pluck('id')->toArray())){
-            $user->likedPosts()->detach($id); //unliked
-            \DB::commit();
-            return response()->json([
-                'likes'=>$post->likers->count()-1
-            ]);
-        }else{
-            $user->likedPosts()->attach($id); //liked
-            \DB::commit();
-            return response()->json([
-                'likes'=>$post->likers->count()+1
-            ]);
-        }
-    }
 }

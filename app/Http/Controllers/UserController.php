@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -51,5 +52,45 @@ class UserController extends Controller
             DB::rollBack();
             return redirect()->back();
         }
+    }
+    public function like($id){
+        $user = User::find(auth()->user()->id);
+        $post = Post::find($id);
+        \DB::beginTransaction();
+        if(in_array($user->id, $post->likers->pluck('id')->toArray())){
+            $user->likedPosts()->detach($id); //unliked
+            \DB::commit();
+            return response()->json([
+                'likes'=>$post->likers->count()-1
+            ]);
+        }else{
+            $user->likedPosts()->attach($id); //liked
+            \DB::commit();
+            return response()->json([
+                'likes'=>$post->likers->count()+1
+            ]);
+        }
+    }
+    public function comment(Request $request, $id){
+        $user = User::find(auth()->user()->id);
+        \DB::beginTransaction();
+        try{
+            $request->validate([
+                'comment'=> 'required'
+            ]);
+            Comment::create([
+                'user_id'=>$user->id,
+                'post_id'=>$id,
+                'comment'=>$request->comment
+            ]);
+            DB::commit();
+        }catch(\Exception $e){
+            \DB::rollBack();
+        }
+        return redirect()->back();
+    }
+    public function uncomment($id){
+        Comment::destroy($id);
+        return redirect()->back();
     }
 }
