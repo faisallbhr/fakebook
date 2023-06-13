@@ -20,6 +20,7 @@ Route::get('/', [UserController::class, 'index']);
 
 Route::middleware('auth')->group(function () {
     // AKTIFITAS
+    Route::patch('notifications/{id}', [UserController::class, 'notifications']);
     // FOLLOW
     Route::get('followers/', [UserController::class, 'readFollowers']);
     Route::post('/follow/{id}', [UserController::class, 'follow']);

@@ -17,8 +17,10 @@ class AppLayout extends Component
         $user = User::find(auth()->user()->id);
         $posts_id = $user->posts()->pluck('id');
         $notifications = Notification::whereIn('post_id', $posts_id)->get();
+        $not_read = Notification::whereIn('post_id', $posts_id)->where('read_at', null)->count();
         return view('layouts.app', [
-            'notifications'=>$notifications
+            'notifications'=>$notifications,
+            'not_read'=>$not_read
         ]);
     }
 }

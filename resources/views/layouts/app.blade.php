@@ -66,6 +66,25 @@
             btnNotif.addEventListener('click', function(){
                 notif.classList.toggle('hidden');
             })
+
+            function read(id){
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type:"patch",
+                    url: "{{ url('notifications') }}"+"/"+id,
+                    data: "read_at = now()",
+                    success: function(response){
+                        $('#not_read').text(response.not_read)
+                    },
+                    error: function(xhr, status, error){
+                        alert(xhr.responseText);
+                    }
+                })
+            }
         </script>
     </body>
 </html>

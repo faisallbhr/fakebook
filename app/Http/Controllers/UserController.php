@@ -74,7 +74,7 @@ class UserController extends Controller
             Notification::where('type', 'like')->where('user_id', $user->id)->where('post_id', $id)->delete();
             DB::commit();
             return response()->json([
-                'likes'=>$post->likers->count()-1
+                'likes'=>$post->likers->count()-1,
             ]);
         }else{
             $user->likedPosts()->attach($id); //liked
@@ -87,7 +87,7 @@ class UserController extends Controller
             ]);
             DB::commit();
             return response()->json([
-                'likes'=>$post->likers->count()+1
+                'likes'=>$post->likers->count()+1,
             ]);
         }
     }
@@ -127,5 +127,11 @@ class UserController extends Controller
             DB::rollBack();
             dd($e->getMessage());
         }
+    }
+    public function notifications($id){
+        Notification::where('user_id', $id)->update(['read_at'=>now()]);
+        return response()->json([
+            'not_read' => 0
+        ]);
     }
 }
