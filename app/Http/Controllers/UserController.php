@@ -53,6 +53,16 @@ class UserController extends Controller
             return redirect()->back();
         }
     }
+    public function deleteFollower($id){
+        $user = auth()->user();
+        $user->followers()->detach($id);
+        return redirect()->back();
+    }
+    public function unfollow($id){
+        $user = auth()->user();
+        $user->followings()->detach($id);
+        return redirect()->back();
+    }
     public function like($id){
         $user = User::find(auth()->user()->id);
         $post = Post::find($id);

@@ -10,7 +10,8 @@ class PostController extends Controller
 {
     public function index(){
         $user = User::find(auth()->user()->id);
-        $followers =\DB::table('followings')->from('followings')->where('following_id', auth()->user()->id)->count();
+        $followers = $user->followers()->get();
+        $followings = $user->followings()->get();
         $posts = Post::where('user_id', auth()->user()->id)->latest()->get();
 
         // USER YANG BELUM DIFOLLOW START
@@ -21,10 +22,6 @@ class PostController extends Controller
                         ->where('followings.user_id', $user->id);
                 })->get();
         // USER YANG BELUM DIFOLLOW END
-        
-        // USER YANG SUDAH DIFOLLOW START
-        $followings = $user->followings()->get();
-        // USER YANG SUDAH DIFOLLOW END
         
         return view('my-profile.index', [
             'users'=>$users,

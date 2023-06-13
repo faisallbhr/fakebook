@@ -159,7 +159,7 @@
                                     <form action="{{ url('comment/'.$comment->id) }}" method="post">
                                         @method('delete')
                                         @csrf
-                                        <button><i class="fa-regular fa-trash-can"></i></button>
+                                        <button onclick="return confirm('Apakah anda yakin akan menghapus komentar?')"><i class="fa-regular fa-trash-can hover:text-primary"></i></button>
                                     </form>
                                     @endif
                                 </div>

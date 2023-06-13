@@ -20,7 +20,12 @@ Route::get('/', [UserController::class, 'index']);
 
 Route::middleware('auth')->group(function () {
     // AKTIFITAS
-    Route::post('/follow/{id}', [UserController::class, 'follow'])->middleware('auth');
+    // FOLLOW
+    Route::get('followers/', [UserController::class, 'readFollowers']);
+    Route::post('/follow/{id}', [UserController::class, 'follow']);
+    Route::delete('unfollow/{id}', [UserController::class, 'unfollow']);
+    Route::delete('delete-follower/{id}', [UserController::class, 'deleteFollower']);
+
     Route::post('/like/{id}', [UserController::class, 'like']);
     Route::post('/comment/{id}', [UserController::class, 'comment']);
     Route::delete('/comment/{id}', [UserController::class, 'uncomment']);
