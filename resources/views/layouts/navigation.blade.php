@@ -34,6 +34,37 @@
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
+                <div class="relative ">
+                    <div class="flex items-center">
+                        <i id="btn-notifications" class="fa-regular fa-bell hover:text-primary focus:text-primary cursor-pointer"></i>
+                        <p class="text-xs bg-red-500 rounded-full text-white px-1 -mt-0.5">{{ $notifications->count() }}</p>
+                    </div>
+                    <div id="notifications" class="absolute top-4 right-6 bg-white rounded hidden"
+                    style="box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;">
+                        <div class="w-[400px] p-4">
+                            <p>Notifikasi</p>
+                            @forelse ($notifications as $notification)
+                            @if ($notification->type=='like')
+                                <div class="flex items-center gap-1 my-1">
+                                    <div class="rounded-full bg-primary px-1">
+                                        <i class="fa-regular fa-thumbs-up scale-75 text-white"></i>
+                                    </div>
+                                    <p><small>{{ $notification->data }}</small></p>
+                                </div>
+                                @else
+                                <div class="flex items-center gap-1 my-1">
+                                    <div class="rounded-full bg-primary px-1">
+                                        <i class="fa-regular fa-comment scale-75 text-white"></i>
+                                    </div>
+                                    <p><small>{{ $notification->data }}</small></p>
+                                </div>
+                            @endif
+                            @empty
+                                
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
                 @if (Route::has('login'))
                     @auth
                     <x-dropdown align="right" width="48">
