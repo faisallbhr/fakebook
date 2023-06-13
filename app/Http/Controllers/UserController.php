@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Notification;
 use App\Models\Post;
 use App\Models\User;
+use App\Notifications\NewLikeNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -69,12 +71,19 @@ class UserController extends Controller
         \DB::beginTransaction();
         if(in_array($user->id, $post->likers->pluck('id')->toArray())){
             $user->likedPosts()->detach($id); //unliked
+            Notification::where('type', 'like')->where('user_id', $user->id)->where('post_id', $id)->delete();
             \DB::commit();
             return response()->json([
                 'likes'=>$post->likers->count()-1
             ]);
         }else{
             $user->likedPosts()->attach($id); //liked
+            Notification::create([
+                'type'=>'like',
+                'user_id'=>$user->id,
+                'post_id'=>$id,
+                'data'=>$user->name." telah menyukai postingan anda."
+            ]);
             \DB::commit();
             return response()->json([
                 'likes'=>$post->likers->count()+1

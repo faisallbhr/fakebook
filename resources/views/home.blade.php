@@ -221,7 +221,7 @@
                     }
                 },
                 error: function(xhr, status, error){
-                    alert(xhr.responseText);
+                    console.log(xhr.responseText);
                 }
             })
         }
