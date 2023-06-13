@@ -68,11 +68,11 @@ class UserController extends Controller
     public function like($id){
         $user = User::find(auth()->user()->id);
         $post = Post::find($id);
-        \DB::beginTransaction();
+        DB::beginTransaction();
         if(in_array($user->id, $post->likers->pluck('id')->toArray())){
             $user->likedPosts()->detach($id); //unliked
             Notification::where('type', 'like')->where('user_id', $user->id)->where('post_id', $id)->delete();
-            \DB::commit();
+            DB::commit();
             return response()->json([
                 'likes'=>$post->likers->count()-1
             ]);
@@ -82,9 +82,10 @@ class UserController extends Controller
                 'type'=>'like',
                 'user_id'=>$user->id,
                 'post_id'=>$id,
+                'url'=>'posts/'.$id,
                 'data'=>$user->name." telah menyukai postingan anda."
             ]);
-            \DB::commit();
+            DB::commit();
             return response()->json([
                 'likes'=>$post->likers->count()+1
             ]);
@@ -92,7 +93,7 @@ class UserController extends Controller
     }
     public function comment(Request $request, $id){
         $user = User::find(auth()->user()->id);
-        \DB::beginTransaction();
+        DB::beginTransaction();
         try{
             $request->validate([
                 'comment'=> 'required'
@@ -102,14 +103,29 @@ class UserController extends Controller
                 'post_id'=>$id,
                 'comment'=>$request->comment
             ]);
+            Notification::create([
+                'type'=>'comment',
+                'user_id'=>$user->id,
+                'post_id'=>$id,
+                'url'=>'posts/'.$id,
+                'data'=>$user->name." telah mengomentari postingan anda."
+            ]);
             DB::commit();
         }catch(\Exception $e){
-            \DB::rollBack();
+            DB::rollBack();
         }
         return redirect()->back();
     }
-    public function uncomment($id){
-        Comment::destroy($id);
-        return redirect()->back();
+    public function uncomment(Request $request, $id){
+        DB::beginTransaction();
+        try{
+            Comment::destroy($id);
+            Notification::where('type', 'comment')->where('user_id', auth()->user()->id)->where('post_id', $request->post_id)->delete();
+            DB::commit();
+            return redirect()->back();
+        }catch(\Exception $e){
+            DB::rollBack();
+            dd($e->getMessage());
+        }
     }
 }
