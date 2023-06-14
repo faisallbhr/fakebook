@@ -85,6 +85,58 @@
                     }
                 })
             }
+
+            // image preview add post
+            document.getElementById('image').addEventListener('change', function(event) {
+                let input = event.target;
+                let reader = new FileReader();
+
+                reader.onload = function() {
+                    var imagePreview = document.getElementById('image-preview');
+                    imagePreview.src = reader.result;
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            });
+            
+            // image preview edit post
+            function imgEdit(id){
+                let img = $('#imgEdit'+id)
+                img.on('change', function(){
+                    let $input = $(this);
+                    let reader = new FileReader(); 
+                    reader.onload = function(){
+                            $("#imgPreview"+id).attr("src", reader.result);
+                    } 
+                    reader.readAsDataURL($input[0].files[0]);
+                })
+            }
+
+            function like(id){
+                // set token csrf
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                let postid = $('#post-id').val();
+                $.ajax({
+                    type:"post",
+                    url: "{{ url('like') }}"+"/"+id,
+                    data: "id="+postid,
+                    success: function(response){
+                        $('#like'+id).text(response.likes)
+                        if($('#btnLike'+id).hasClass('text-primary')){
+                            $('#btnLike'+id).removeClass('text-primary')
+                        }else{
+                            $('#btnLike'+id).addClass('text-primary')
+                        }
+                    },
+                    error: function(xhr, status, error){
+                        alert(xhr.responseText);
+                    }
+                })
+            }
         </script>
     </body>
 </html>

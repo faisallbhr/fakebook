@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/comment/{id}', [UserController::class, 'uncomment']);
 
     // POSTINGAN
+    Route::get('/posts/{id}', [PostController::class, 'show']);
     Route::post('/posts', [PostController::class, 'store']);
     Route::get('/my-profile', [PostController::class, 'index']);
     Route::put('my-profile/posts/{id}', [PostController::class, 'update']);

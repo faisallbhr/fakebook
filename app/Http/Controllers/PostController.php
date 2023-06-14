@@ -49,6 +49,22 @@ class PostController extends Controller
             return redirect()->back()->with('error', 'Gagal membuat postingan, sesuaikan format anda');
         }
     }
+    public function show($id){
+        $user = User::find(auth()->user()->id);
+        $users = User::whereNot('id', $user->id)
+        ->whereNotIn('id', function ($query) use ($user){
+            $query->select('followings.following_id')
+                ->from('followings')
+                ->where('followings.user_id', $user->id);
+            })->get();
+        $followings = $user->followings()->get();
+        $post = Post::find($id);
+        return view('show', [
+            'post'=>$post,
+            'users'=>$users,
+            'followings'=>$followings
+        ]);
+    }
     public function update(Request $request, $id){
         \DB::beginTransaction();
         try{
@@ -70,6 +86,6 @@ class PostController extends Controller
     }
     public function destroy($id){
         Post::destroy($id);
-        return redirect()->back();
+        return redirect('my-profile');
     }
 }

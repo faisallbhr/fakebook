@@ -129,7 +129,9 @@ class UserController extends Controller
         }
     }
     public function notifications($id){
-        Notification::where('user_id', $id)->update(['read_at'=>now()]);
+        $user = User::find($id);
+        $posts_id = $user->posts()->pluck('id');
+        Notification::whereIn('post_id', $posts_id)->update(['read_at'=>now()]);
         return response()->json([
             'not_read' => 0
         ]);

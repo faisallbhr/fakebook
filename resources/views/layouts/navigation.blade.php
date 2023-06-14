@@ -39,10 +39,10 @@
                         <button onclick="read({{ auth()->user()->id }})" id="btn-notifications" class="fa-regular fa-bell hover:text-primary focus:text-primary cursor-pointer"></button>
                         <p id="not_read" class="text-xs bg-red-500 rounded-full text-white px-1 -mt-0.5">{{ $not_read }}</p>
                     </div>
-                    <div id="notifications" class="absolute top-6 right-6 bg-white rounded hidden"
+                    <div id="notifications" class="absolute top-6 right-6 bg-white rounded hidden z-50"
                     style="box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;">
-                        <div class="w-[400px] p-4">
-                            <p>Notifikasi</p>
+                        <div class="w-[400px] p-4 overflow-y-scroll h-60">
+                            <p class="font-semibold border-b py-1">Notifikasi</p>
                             @forelse ($notifications as $notification)
                             @if ($notification->type=='like')
                                 <div class="flex items-center gap-1 my-1">

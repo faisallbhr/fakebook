@@ -1,38 +1,4 @@
 <x-app-layout>
-    {{-- Modal --}}
-    <div id="defaultModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full bg-black bg-opacity-90">
-        <div class="relative w-full max-w-2xl max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow">
-                <!-- Modal header -->
-                <div class="flex items-start justify-between mx-4 py-4 border-b rounded-t">
-                    <h3 class="text-xl font-semibold text-gray-900 ">
-                        Buat postingan
-                    </h3>
-                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center " data-modal-hide="defaultModal">
-                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                </div>
-                <!-- Modal body -->
-                <form action="{{ url('posts/') }}" method="post" class="p-4" enctype="multipart/form-data">
-                    @csrf
-                    <div class="flex items-center gap-2">
-                        <div class="flex items-center justify-center w-12 h-12">
-                            <img src="https://ui-avatars.com/api/?name={{ auth()->user()->name }}&rounded=true&color=1b74e4" alt="Profile image" class="border-2 border-primary rounded-full">
-                        </div>
-                        <p class="font-bold text-xl">{{ auth()->user()->name }}</p>
-                    </div>
-                    <textarea name="description" id="description" class="w-full border-none" placeholder="Apa yang sedang kamu pikirkan, {{ auth()->user()->name }}"></textarea>
-                    <div>
-                        <img id="image-preview" class="max-w-[200px] my-2">
-                        <input name="photo" type="file" id="image">
-                    </div>
-                    <button class="w-full bg-primary my-2 rounded font-bold text-white py-2">Kirim</button>
-                </form>
-            </div>
-        </div>
-    </div>
     <div class="flex min-h-screen">
         <div class="w-1/4 my-4 px-20">
             <div class="flex gap-2 items-center border-b">
@@ -57,22 +23,61 @@
                 @endforeach
             </div>
         </div>
-        <div class="max-w-5xl w-full mx-auto">
-            {{-- BUAT POST --}}
-            <div class="bg-white rounded shadow my-4">
-                <div class="flex w-full p-4 gap-2 items-center">
-                    <div class="flex items-center justify-center w-16 h-16">
-                        <img src="https://ui-avatars.com/api/?name={{ auth()->user()->name }}&rounded=true&color=1b74e4" alt="Profile image" class="border-2 border-primary rounded-full">
-                    </div>
-                    <div class="w-full">
-                        <button data-modal-target="defaultModal" data-modal-toggle="defaultModal" class="w-full text-left bg-gray-100 hover:bg-gray-200 px-4 py-4 rounded-full">Apa yang sedang kamu pikirkan, {{ auth()->user()->name }}?</button>
+        <div class="max-w-5xl w-full mx-auto my-4">
+            <div class="bg-white rounded shadow my-4 p-4 relative ">
+                {{-- Dropdown --}}
+                @if (auth()->user()->id==$post->user_id)
+                <div class="dropdown">
+                    <i class="fa-solid fa-ellipsis absolute top-4 right-4 cursor-pointer dropdown"></i>
+                    <ul class="dropdown-menu hidden bg-white absolute top-7 right-7 pr-8 pl-4 py-2 text-secondary rounded-l rounded-b" 
+                        style="box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;">
+                        <li class="hover:text-black text-sm my-2"><button data-modal-target="edit-modal" data-modal-toggle="edit-modal" class="" type="button">Edit</button></li>
+                        <li class="hover:text-black text-sm my-2">
+                            <form action="{{ url('my-profile/posts/'.$post->id) }}" method="post">
+                                @method('delete')
+                                @csrf
+                                <button onclick="return confirm('Apakah anda yakin ingin menghapus postingan?')">Hapus</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                @endif
+                <div id="edit-modal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full bg-black bg-opacity-90">
+                    <div class="relative w-full max-w-2xl max-h-full">
+                        <!-- Modal content -->
+                        <div class="relative bg-white rounded-lg shadow">
+                            <!-- Modal header -->
+                            <div class="flex items-start justify-between mx-4 py-4 border-b rounded-t">
+                                <h3 class="text-xl font-semibold text-gray-900 ">
+                                    Edit postingan
+                                </h3>
+                                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center " data-modal-hide="edit-modal">
+                                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                    <span class="sr-only">Close modal</span>
+                                </button>
+                            </div>
+                            <!-- Modal body -->
+                            <form action="{{ url('my-profile/posts/'.$post->id) }}" method="post" class="p-4" enctype="multipart/form-data">
+                                @method('put')
+                                @csrf
+                                <div class="flex items-center gap-2">
+                                    <div class="flex items-center justify-center border-2 border-primary w-12 h-12 rounded-full px-4">
+                                        <i class="fa-solid fa-user text-primary scale-150"></i>
+                                    </div>
+                                    <p class="font-bold text-xl">{{ auth()->user()->name }}</p>
+                                </div>
+                                <textarea name="description" id="description" class="w-full border-none ">{{ $post->description }}</textarea>
+                                <div>
+                                    <img id="imgPreview{{ $post->id }}" class="max-w-[200px] my-2">
+                                    <input onclick="imgEdit({{ $post->id }})" name="photo" type="file" id="imgEdit{{ $post->id }}">
+                                </div>
+                                <button class="w-full bg-primary my-2 rounded font-bold text-white py-2">Ubah postingan</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
     
-            @foreach ($posts as $post)        
-            {{-- POST --}}
-            <div class="bg-white rounded shadow my-4 p-4 relative ">
+                {{-- Content --}}
                 <div class="flex gap-2">
                     <div class="flex items-center justify-center w-12 h-12">
                         <img src="https://ui-avatars.com/api/?name={{ $post->user->name }}&rounded=true&color=1b74e4" alt="Profile image" class="border-2 border-primary rounded-full">
@@ -83,18 +88,18 @@
                     </div>
                 </div>
                 <div>
-                    <a href="{{ url('posts/'.$post->id) }}" class="px-1 py-2">{{ $post->description }}</a>
+                    <a href="{{ url('posts/'.$post->id) }}">
+                        <p class="px-1 py-2">{{ $post->description }}</p>
+                    </a>
                     @if ($post->photo!=null)
                     <div>
-                        <img src="{{ 'storage/'.$post->photo }}" alt="photo" class="object-contain h-80 mx-auto border rounded-md">
+                        <img src="{{ '/storage/'.$post->photo }}" alt="photo" class="object-contain h-80 mx-auto border rounded-md">
                     </div>
                     @endif
                     <div class="flex justify-center items-center gap-1 border-b">
                         <p id="like{{ $post->id }}">{{ $post->likers->count() }}</p>
                         <input id="post-id" type="text" value="{{ $post->id  }}" class="hidden">
-                        <button id="btnLike{{ $post->id }}" onclick="like({{ $post->id }})" class="py-2 hover:text-primary @if(in_array(auth()->user()->id, $post->likers->pluck('id')->toArray())) text-primary @endif">
-                            <i class="fa-regular fa-thumbs-up mx-1"></i>Suka
-                        </button>
+                        <button id="btnLike{{ $post->id }}" onclick="like({{ $post->id }})" class="py-2 hover:text-primary @if(in_array(auth()->user()->id, $post->likers->pluck('id')->toArray())) text-primary @endif"><i class="fa-regular fa-thumbs-up mx-1"></i>Like</button>
                     </div>
                     <div class="flex items-center gap-2 mt-2 mb-4">
                         <div class="flex items-center justify-center w-10 h-10">
@@ -124,7 +129,7 @@
                                         @method('delete')
                                         @csrf
                                         <input type="text" class="hidden" name="post_id" value="{{ $post->id }}">
-                                        <button onclick="return confirm('Apakah anda yakin akan menghapus komentar?')"><i class="fa-regular fa-trash-can hover:text-primary"></i></button>
+                                        <button onclick="return confirm('Apakah anda yakin ingin menghapus komentar?')"><i class="fa-regular fa-trash-can"></i></button>
                                     </form>
                                     @endif
                                 </div>
@@ -135,7 +140,6 @@
                     </div>
                 </div>
             </div>
-            @endforeach
         </div>
         <div class="w-1/4 my-4 px-20">
             <div class="flex gap-2 items-center border-b">

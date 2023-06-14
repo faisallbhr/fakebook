@@ -25,7 +25,8 @@
                 </div>
                 <textarea name="description" id="description" class="w-full border-none" placeholder="Apa yang sedang kamu pikirkan, {{ auth()->user()->name }}"></textarea>
                 <div>
-                    <input name="photo" type="file">
+                    <img id="image-preview" class="max-w-[200px] my-2">
+                    <input name="photo" type="file" id="image">
                 </div>
                 <button class="w-full bg-primary my-2 rounded font-bold text-white py-2">Kirim</button>
             </form>
@@ -178,7 +179,8 @@
                         </div>
                         <textarea name="description" id="description" class="w-full border-none ">{{ $post->description }}</textarea>
                         <div>
-                            <input name="photo" type="file">
+                            <img id="imgPreview{{ $post->id }}" class="max-w-[200px] my-2">
+                            <input onclick="imgEdit({{ $post->id }})" name="photo" type="file" id="imgEdit{{ $post->id }}">
                         </div>
                         <button class="w-full bg-primary my-2 rounded font-bold text-white py-2">Ubah postingan</button>
                     </form>
@@ -215,7 +217,9 @@
                 </div>
             </div>
             <div>
-                <p class="px-1 py-2">{{ $post->description }}</p>
+                <a href="{{ url('posts/'.$post->id) }}">
+                    <p class="px-1 py-2">{{ $post->description }}</p>
+                </a>
                 @if ($post->photo!=null)
                 <div>
                     <img src="{{ 'storage/'.$post->photo }}" alt="photo" class="object-contain h-80 mx-auto border rounded-md">
@@ -281,32 +285,4 @@
         </div>
     </div>
 </div>
-
-<script>    
-    function like(id){
-        // set token csrf
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        let postid = $('#post-id').val();
-        $.ajax({
-            type:"post",
-            url: "{{ url('like') }}"+"/"+id,
-            data: "id="+postid,
-            success: function(response){
-                $('#like'+id).text(response.likes)
-                if($('#btnLike'+id).hasClass('text-primary')){
-                    $('#btnLike'+id).removeClass('text-primary')
-                }else{
-                    $('#btnLike'+id).addClass('text-primary')
-                }
-            },
-            error: function(xhr, status, error){
-                alert(xhr.responseText);
-            }
-        })
-    }
-</script>
 </x-app-layout>
