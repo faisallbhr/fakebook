@@ -51,19 +51,26 @@ class PostController extends Controller
     }
     public function show($id){
         $user = User::find(auth()->user()->id);
-        $users = User::whereNot('id', $user->id)
-        ->whereNotIn('id', function ($query) use ($user){
-            $query->select('followings.following_id')
+        $post = Post::find($id);
+
+        // hanya bisa melihat post user yang sudah difollow
+        if(in_array($post->user_id, $user->followings()->pluck('users.id')->toArray()) || $post->user_id == $user->id){
+            $users = User::whereNot('id', $user->id)
+            ->whereNotIn('id', function ($query) use ($user){
+                $query->select('followings.following_id')
                 ->from('followings')
                 ->where('followings.user_id', $user->id);
             })->get();
-        $followings = $user->followings()->get();
-        $post = Post::find($id);
-        return view('show', [
-            'post'=>$post,
-            'users'=>$users,
-            'followings'=>$followings
-        ]);
+            $followings = $user->followings()->get();
+            
+            return view('show', [
+                'post'=>$post,
+                'users'=>$users,
+                'followings'=>$followings
+            ]);
+        }else{
+            abort(403);
+        }
     }
     public function update(Request $request, $id){
         \DB::beginTransaction();
