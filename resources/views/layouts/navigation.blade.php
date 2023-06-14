@@ -45,18 +45,18 @@
                             <p class="font-semibold border-b py-1">Notifikasi</p>
                             @forelse ($notifications as $notification)
                             @if ($notification->type=='like')
-                                <div class="flex items-center gap-1 my-1">
+                                <div class="flex items-center gap-1 my-1 hover:bg-gray-200 rounded">
                                     <div class="rounded-full bg-primary px-1">
                                         <i class="fa-regular fa-thumbs-up scale-75 text-white"></i>
                                     </div>
-                                    <p><small>{{ $notification->data }}</small></p>
+                                    <a href="{{ url($notification->url) }}"><small>{{ $notification->data }}</small></a>
                                 </div>
                                 @else
-                                <div class="flex items-center gap-1 my-1">
+                                <div class="flex items-center gap-1 my-1 hover:bg-gray-200 rounded">
                                     <div class="rounded-full bg-primary px-1">
                                         <i class="fa-regular fa-comment scale-75 text-white"></i>
                                     </div>
-                                    <p><small>{{ $notification->data }}</small></p>
+                                    <a href="{{ url($notification->url) }}"><small>{{ $notification->data }}</small></a>
                                 </div>
                             @endif
                             @empty
