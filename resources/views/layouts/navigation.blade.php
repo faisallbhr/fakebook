@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -41,7 +41,7 @@
                     </div>
                     <div id="notifications" class="absolute top-6 right-6 bg-white rounded hidden z-50"
                     style="box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;">
-                        <div class="w-[400px] p-4 overflow-y-scroll h-60">
+                        <div class="w-[400px] p-4 overflow-y-scroll max-h-60">
                             <p class="font-semibold border-b py-1">Notifikasi</p>
                             @forelse ($notifications as $notification)
                             @if ($notification->type=='like')

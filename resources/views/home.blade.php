@@ -57,7 +57,7 @@
                 @endforeach
             </div>
         </div>
-        <div class="max-w-5xl w-full mx-auto">
+        <div class="max-w-5xl w-full mx-60">
             {{-- BUAT POST --}}
             <div class="bg-white rounded shadow my-4">
                 <div class="flex w-full p-4 gap-2 items-center">

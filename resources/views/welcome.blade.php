@@ -21,26 +21,36 @@
             </div>
         </div>
     </div>
-    <div class="grid grid-cols-2 gap-40">
+    <div class="grid grid-cols-2 items-center gap-40">
         <div>
-
+            <h1 class="text-center text-primary font-bold text-5xl -mb-4 drop-shadow-xl">FakeBook</h1>
+            <img src="{{ url('assets/logo.svg') }}" alt="FakeBook" class="max-w-lg drop-shadow-2xl">
         </div>
         <div>
-            <form action="{{ route('login') }}" method="POST" class="bg-white rounded-md p-4 w-96">
+            <form action="{{ route('login') }}" method="POST" class="bg-white rounded-md p-4 shadow mx-auto w-96">
                 @csrf
-                <div>
-                    <input type="email" name="email" class="my-2 rounded-md px-4 py-2 w-full text-2xl" placeholder="Email">
+                <div class="my-4">
+                    <input type="email" name="email" class="rounded-md px-4 py-2 w-full text-lg" placeholder="Email">
+                    @error('email')
+                        <small class="text-red-500 ml-2">{{ $message }}</small>
+                    @enderror
                 </div>
-                <div>
-                    <input type="password" name="password" class="my-2 rounded-md px-4 py-2 w-full text-2xl" placeholder="Password">
+                <div class="my-4">
+                    <input type="password" name="password" class="rounded-md px-4 py-2 w-full text-lg" placeholder="Password">
+                    @error('password')
+                        <small class="text-red-500 ml-2">{{ $message }}</small>
+                    @enderror
                 </div>
-                <div class="border-b ">
-                    <button type="submit" class="bg-primary text-2xl text-white text-center w-full rounded-md font-semibold px-2 py-1 my-2">Login</button>
+                <div class="border-b py-2 pb-4">
+                    <button type="submit" class="bg-primary text-2xl text-white text-center w-full rounded-md font-semibold px-2 py-1 pb-2">Log in</button>
                 </div>
-                <div class="flex my-2">
-                    <p data-modal-target="defaultModal" data-modal-toggle="defaultModal" class="bg-green-500 text-2xl w-full px-2 py-1 rounded-md font-semibold text-white text-center cursor-pointer">Buat akun baru</p>
+                <div class="my-2 flex justify-center">
+                    <p data-modal-target="defaultModal" data-modal-toggle="defaultModal" class="bg-green-500 text-2xl my-4 px-4 py-1 rounded-md font-semibold text-white cursor-pointer pb-2">Create new account</p>
                 </div>
             </form>
+            <div>
+                <p class="my-4 text-center"><a href="#" class="font-bold">Create a Page</a> for a celebrity, brand or business.</p>
+            </div>
         </div>
     </div>
 </x-guest-layout>

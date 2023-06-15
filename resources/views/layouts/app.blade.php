@@ -32,8 +32,8 @@
             }
         </style>
     </head>
-    <body class="antialiased text-[#050505]">
-        <div class="min-h-screen bg-gray-100">
+    <body class="antialiased text-[#050505] relative">
+        <div class="min-h-screen bg-[#f0f2f5]">
             @include('layouts.navigation')
 
             <!-- Page Heading -->
@@ -49,7 +49,10 @@
             <main>
                 {{ $slot }}
             </main>
-            <footer class="text-center bg-secondary py-4 text-white">
+            <div id="to-top" class="sticky bottom-4 left-[95%] bg-primary rounded-full w-10 h-10 animate-bounce flex justify-center items-center drop-shadow cursor-pointer">
+                <i class="fa-solid fa-up-long flex scale-150 text-white drop-shadow"></i>
+            </div>
+            <footer class="text-center bg-gray-600 py-4 text-white">
                 <p>©Copyright <span class="text-primary font-bold">FakeBook</span> | Made With ❤️</p>
             </footer>
         </div>
@@ -66,6 +69,14 @@
             btnNotif.addEventListener('click', function(){
                 notif.classList.toggle('hidden');
             })
+
+            //scroll to top
+            $(document).ready(function() {
+                // Saat tombol scroll to top diklik
+                $('#to-top').click(function() {
+                    $('html, body').animate({ scrollTop: 0 }, '');
+                });
+            });
 
             function read(id){
                 $.ajaxSetup({

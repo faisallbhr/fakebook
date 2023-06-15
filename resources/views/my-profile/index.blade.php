@@ -117,7 +117,7 @@
             @endforeach
         </div>
     </div>
-    <div class="max-w-5xl w-full mx-auto my-4">
+    <div class="max-w-5xl w-full mx-60 my-4">
         {{-- HEADER --}}
         <div class="bg-white flex gap-4 p-4">
             <div class="flex items-center justify-center w-20 h-20">
