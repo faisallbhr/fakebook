@@ -60,10 +60,10 @@
             <img src="{{ url('assets/logo.svg') }}" alt="FakeBook" class="max-w-lg drop-shadow-2xl">
         </div>
         <div>
-            <form id="login" action="{{ route('login') }}" method="POST" class="bg-white rounded-md p-4 shadow mx-auto w-96">
+            <form id="login" action="{{ route('login') }}" method="POST" class="bg-white rounded-md p-4 shadow-xl mx-auto w-96">
                 @csrf
                 <div class="my-4">
-                    <input type="email" name="email" class="rounded-md px-4 py-2 w-full text-lg" placeholder="Email">
+                    <input type="email" name="email" class="rounded-md px-4 py-2 w-full text-lg" placeholder="Email" autofocus>
                     @error('email')
                         <small class="text-red-500 ml-2">{{ $message }}</small>
                     @enderror
