@@ -23,7 +23,7 @@
                 @endforeach
             </div>
         </div>
-        <div class="max-w-5xl w-full mx-auto my-4">
+        <div class="max-w-5xl w-full mx-auto ">
             <div class="bg-white rounded shadow my-4 p-4 relative ">
                 {{-- Dropdown --}}
                 @if (auth()->user()->id==$post->user_id)

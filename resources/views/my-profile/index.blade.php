@@ -108,9 +108,9 @@
                 <form action="{{ url('follow/'.$user->id) }}" method="post" class="flex justify-center my-auto ">
                     @csrf
                     @if (in_array(auth()->user()->id,$user->followings->pluck('id')->toArray()))
-                        <button class="bg-primary text-white px-2 py-1 rounded font-medium">Ikuti balik</button>
+                        <button class="bg-primary text-white px-2 py-1 rounded font-medium whitespace-nowrap">Ikuti balik</button>
                     @else
-                        <button class="bg-primary text-white px-2 py-1 rounded font-medium">Ikuti</button>
+                        <button class="bg-primary text-white px-2 py-1 rounded font-medium whitespace-nowrap">Ikuti</button>
                     @endif
                 </form>
             </div>
