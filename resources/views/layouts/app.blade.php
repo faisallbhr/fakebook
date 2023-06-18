@@ -19,6 +19,9 @@
         {{-- Font Awesome --}}
         <script src="https://kit.fontawesome.com/516b6a89c8.js" crossorigin="anonymous"></script>
 
+        {{-- Apex Chart --}}
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
         {{-- CSS --}}
         <style>
             body{
@@ -65,9 +68,25 @@
         <script>
             const btnNotif = document.querySelector('#btn-notifications');
             const notif = document.querySelector('#notifications');
+            const btnInsight = document.querySelector('#btn-insight');
+            const insight = document.querySelector('#insight');
 
             btnNotif.addEventListener('click', function(){
                 notif.classList.toggle('hidden');
+                btnNotif.classList.toggle('text-primary');
+                if(! insight.classList.contains('hidden')){
+                    insight.classList.toggle('hidden');
+                    btnInsight.classList.toggle('text-primary');
+                }
+            })
+            
+            btnInsight.addEventListener('click', function(){
+                insight.classList.toggle('hidden');
+                btnInsight.classList.toggle('text-primary');
+                if(! notif.classList.contains('hidden')){
+                    notif.classList.toggle('hidden');
+                    btnNotif.classList.toggle('text-primary');
+                }
             })
 
             //scroll to top
@@ -148,6 +167,59 @@
                     }
                 })
             }
+        </script>
+
+        {{-- chart --}}
+        <script>
+            var options = {
+                series: [{
+                name: 'Like',
+                data: [{{ $likes1 }}, {{ $likes2 }}, {{ $likes3 }}, {{ $likes4 }}, {{ $likes5 }}, {{ $likes6 }}, {{ $likes7 }}, {{ $likes8 }}, {{ $likes9 }}, {{ $likes10 }}, {{ $likes11 }}, {{ $likes12 }}]
+                }, {
+                name: 'Comment',
+                data: [{{ $comments1 }}, {{ $comments2 }}, {{ $comments3 }}, {{ $comments4 }}, {{ $comments5 }}, {{ $comments6 }}, {{ $comments7 }}, {{ $comments8 }}, {{ $comments9 }}, {{ $comments10 }}, {{ $comments11 }}, {{ $comments12 }}]
+                }],
+                chart: {
+                type: 'bar',
+                height: 350
+                },
+                plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                },
+                },
+                dataLabels: {
+                enabled: false
+                },
+                stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+                },
+                xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                },
+                yaxis: {
+                title: {
+                    text: 'Jumlah'
+                }
+                },
+                fill: {
+                opacity: 1
+                },
+                tooltip: {
+                y: {
+                    formatter: function (val) {
+                    return val 
+                    }
+                }
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#chart"), options);
+            chart.render();
         </script>
     </body>
 </html>

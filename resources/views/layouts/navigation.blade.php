@@ -34,12 +34,13 @@
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
-                <div class="relative ">
+                <div class="relative flex gap-4 mr-4">
+                    {{-- notification --}}
                     <div class="flex items-center">
-                        <button onclick="read({{ auth()->user()->id }})" id="btn-notifications" class="fa-regular fa-bell hover:text-primary focus:text-primary cursor-pointer"></button>
+                        <button onclick="read({{ auth()->user()->id }})" id="btn-notifications" class="fa-regular fa-bell hover:text-primary"></button>
                         <p id="not_read" class="text-xs bg-red-500 rounded-full text-white px-1 -mt-0.5">{{ $not_read }}</p>
                     </div>
-                    <div id="notifications" class="absolute top-6 right-6 bg-white rounded hidden z-50"
+                    <div id="notifications" class="absolute top-6 right-16 bg-white rounded hidden z-50"
                     style="box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;">
                         <div class="w-[400px] p-4 overflow-y-scroll max-h-60">
                             <p class="font-semibold border-b py-1">Notifikasi</p>
@@ -60,9 +61,18 @@
                                 </div>
                             @endif
                             @empty
-                                
                             @endforelse
                         </div>
+                    </div>
+
+                    {{-- insight --}}
+                    <div>
+                        <button id="btn-insight" class="fa-solid fa-chart-column hover:text-primary"></button>
+                    </div>
+                    <div id="insight" class="absolute top-6 right-4 bg-white rounded w-96 z-50 hidden p-4"
+                    style="box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;">
+                        <p class="font-semibold border-b py-1">Insight</p>
+                        <div id="chart"></div>
                     </div>
                 </div>
                 @if (Route::has('login'))

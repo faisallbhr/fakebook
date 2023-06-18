@@ -18,4 +18,7 @@ class Post extends Model
     public function comment(){
         return $this->hasMany(Comment::class);
     }
+    public function notification(){
+        return $this->hasMany(Notification::class);
+    }
 }

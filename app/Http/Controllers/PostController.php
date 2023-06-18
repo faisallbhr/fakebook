@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $user = User::find(auth()->user()->id);
         $followers = $user->followers()->get();
         $followings = $user->followings()->get();
@@ -16,82 +17,86 @@ class PostController extends Controller
 
         // USER YANG BELUM DIFOLLOW START
         $users = User::whereNot('id', $user->id)
-                    ->whereNotIn('id', function ($query) use ($user){
-                    $query->select('followings.following_id')
-                        ->from('followings')
-                        ->where('followings.user_id', $user->id);
-                })->get();
+            ->whereNotIn('id', function ($query) use ($user) {
+                $query->select('followings.following_id')
+                    ->from('followings')
+                    ->where('followings.user_id', $user->id);
+            })->get();
         // USER YANG BELUM DIFOLLOW END
-        
+
         return view('my-profile.index', [
-            'users'=>$users,
-            'followers'=>$followers,
-            'followings'=>$followings,
-            'posts'=>$posts
+            'users' => $users,
+            'followers' => $followers,
+            'followings' => $followings,
+            'posts' => $posts
         ]);
     }
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         \DB::beginTransaction();
-        try{
+        try {
             $validatedData = $request->validate([
-                'description'=>'required|max:255',
-                'photo'=> 'image'
+                'description' => 'required|max:255',
+                'photo' => 'image'
             ]);
             $validatedData['user_id'] = auth()->user()->id;
-            if($request->file('photo')){
+            if ($request->file('photo')) {
                 $validatedData['photo'] = $request->file('photo')->store('post-photo');
             }
             Post::create($validatedData);
             \DB::commit();
-            return redirect()->back()->with('success', 'Berhasil membuat postingan');
-        }catch(\Exception $e){
+            return redirect()->back();
+        } catch (\Exception $e) {
             \DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal membuat postingan, sesuaikan format anda');
+            return redirect()->back();
         }
     }
-    public function show($id){
+    public function show($id)
+    {
         $user = User::find(auth()->user()->id);
         $post = Post::find($id);
 
         // hanya bisa melihat post user yang sudah difollow
-        if(in_array($post->user_id, $user->followings()->pluck('users.id')->toArray()) || $post->user_id == $user->id){
+        if (in_array($post->user_id, $user->followings()->pluck('users.id')->toArray()) || $post->user_id == $user->id) {
             $users = User::whereNot('id', $user->id)
-            ->whereNotIn('id', function ($query) use ($user){
-                $query->select('followings.following_id')
-                ->from('followings')
-                ->where('followings.user_id', $user->id);
-            })->get();
+                ->whereNotIn('id', function ($query) use ($user) {
+                    $query->select('followings.following_id')
+                        ->from('followings')
+                        ->where('followings.user_id', $user->id);
+                })->get();
             $followings = $user->followings()->get();
-            
+
             return view('show', [
-                'post'=>$post,
-                'users'=>$users,
-                'followings'=>$followings
+                'post' => $post,
+                'users' => $users,
+                'followings' => $followings
             ]);
-        }else{
+        } else {
             abort(403);
         }
     }
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
         \DB::beginTransaction();
-        try{
+        try {
             $validatedData = $request->validate([
-                'description'=>'required|max:255',
-                'photo'=> 'image'
+                'description' => 'required|max:255',
+                'photo' => 'image'
             ]);
             $validatedData['user_id'] = auth()->user()->id;
-            if($request->hasFile('photo')){
+            if ($request->hasFile('photo')) {
                 $validatedData['photo'] = $request->file('photo')->store('post-photo');
             }
             Post::where('id', $id)->update($validatedData);
             \DB::commit();
             return redirect()->back();
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             \DB::rollBack();
             return redirect()->back();
         }
     }
-    public function destroy($id){
+    public function destroy($id)
+    {
         Post::destroy($id);
         return redirect('my-profile');
     }
