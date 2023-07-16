@@ -6,11 +6,11 @@
 
 ## Profile Page
 
-![alt text](https://github.com/faisallbhr/fakebook/blob/master/screenshot/profile1.png?raw=true)
-![alt text](https://github.com/faisallbhr/fakebook/blob/master/screenshot/profile2.png?raw=true)
-![alt text](https://github.com/faisallbhr/fakebook/blob/master/screenshot/profile3.png?raw=true)
+![Profile 1](https://github.com/faisallbhr/fakebook/blob/master/public/screenshot/profile1.png)
+![Profile 2](https://github.com/faisallbhr/fakebook/blob/master/public/screenshot/profile2.png)
+![Profile 3](https://github.com/faisallbhr/fakebook/blob/master/public/screenshot/profile3.png)
 
 
 ## Home Page
 
-![alt text](https://github.com/faisallbhr/fakebook/blob/master/screenshot/beranda.png?raw=true)
+![Home Page](https://github.com/faisallbhr/fakebook/blob/master/public/screenshot/beranda.png)
