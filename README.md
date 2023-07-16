@@ -1,7 +1,7 @@
 
 ## Login Page
 
-![Login Page](https://github.com/faisallbhr/fakebook/blob/master/public/screenshot/login.png?raw=true)
+![Login Page](https://github.com/faisallbhr/fakebook/blob/master/public/screenshot/loginpage.png?raw=true)
 
 
 ## Profile Page
